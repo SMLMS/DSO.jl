@@ -25,6 +25,8 @@ module DSO
     export here, stage_here, set_stage, read_params, create, compile_config, repro
     include("api.jl")
 
+    include("util.jl")
+
     # define constants
     const DSO_EXEC = "dso"
     const CONFIG = Config()

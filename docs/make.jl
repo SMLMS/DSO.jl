@@ -8,9 +8,8 @@ makedocs(
     pages = [
         "Home" => "index.md",
         "Core API" => "api.md",
-        "Data Structures" => "params.md",
-        "Configuration" => "config.md",
-        "Utilities" => "utils.md",
+        "Data Structures" => "dsoParams.md",
+        "Configuration" => "config.md"
     ]
 )
 

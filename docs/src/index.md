@@ -57,6 +57,3 @@ If you use the DSO CLI, typical flags include:
 - Julia ≥ 1.10.10
 - Dependencies: Dates, FilePathsBase, YAML
 
-## License
-
-See [LICENSE](LICENSE).
