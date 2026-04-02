@@ -22,7 +22,7 @@ Use these functions to load and parse configuration parameters for your DSO proj
 
 ```@docs
 read_params
-read_safe_yaml
+DSO.read_safe_yaml
 ```
 
 ---
@@ -40,4 +40,5 @@ repro
 ---
 
 ## **Error Handling & Dependencies**
+
 All CLI-dependent functions (`read_params`, `compile_config`, `create`, `repro`) perform a check via `dso_cli_available()` before execution. If an external process fails, these functions capture the `stderr` content and throw a descriptive Julia error.

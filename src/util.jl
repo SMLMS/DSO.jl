@@ -104,14 +104,42 @@ function get_project_root(start_directory::AbstractString)::AbstractString
 end
 
 """
-    dso_cli_available
+    dso_cli_available()::Bool
 
 Checks the DSO CLI is available in the System PATH.
-Throws an error with a link the installation instruction if not available. 
+
+# Output
+
+A bool that states if DSO CLI is available or not.
 """
-function dso_cli_available()
+function dso_cli_available()::Bool
     if Sys.which("$DSO_EXEC") === nothing
-        error("DSO CLI not found in PATH. Please install the DSO CLI and assure it is available in system PATH. See https://boehringer-ingelheim.github.io/dso/cli_installation.html for more information.")
+        println("DSO CLI not found in PATH. Please install the DSO CLI and assure it is available in system PATH. See https://boehringer-ingelheim.github.io/dso/cli_installation.html for more information.")
+        return false
     end
     return true
+end
+
+
+"""
+    run_dso(command::Base.ProcessChain)::Nothing
+
+Helper function that executes the dso command
+
+# Arguments
+
+- `command::Base.ProcessCain`: Process to be executed
+
+# Output
+
+nothing
+"""
+function run_dso(command::Base.ProcessChain)::Nothing
+    try
+        run(command)
+    catch e
+        stderror_content = isfile(tmp_err_file) ? read(tmp_err_file, String) : ""
+        error("An error occurred when executing dso: \n$stderror_content\n$(sprint(showerror, e))")
+    end
+    return nothing
 end

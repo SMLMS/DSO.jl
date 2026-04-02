@@ -5,9 +5,9 @@ The `util.jl` file provides a suite of utility functions primarily focused on fi
 ---
 
 ```@docs
-is_relative_to
-find_in_parent
-get_project_root
-dso_cli_available
+DSO.is_relative_to
+DSO.find_in_parent
+DSO.get_project_root
+DSO.dso_cli_available
 ```
 

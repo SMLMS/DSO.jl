@@ -117,13 +117,13 @@ end
 
 
 """
-    read_safe_yaml(params_file::String)::Dict
+    read_safe_yaml(params_file::AbstractString)::Dict
 
 Reads params YAML.
 
 # Arguments
 
--`params_file::String`: path to the parameter file
+-`params_file::AbstractString`: path to the parameter file
 
 # Output
 
@@ -135,7 +135,7 @@ Parameters in dictionary format
 params_dict = read_safe_yaml("path/to/params.yaml")
 ```
 """
-function read_safe_yaml(params_file::String)::Dict
+function read_safe_yaml(params_file::AbstractString)::Dict
     return YAML.load_file(params_file)
 end
 
@@ -143,18 +143,20 @@ end
 
 
 """
-    read_params(stage_path=nothing, return_list=false)::Union{Dict, DsoParams}
+    read_params(stage_path::Union{AbstractString, Nothing}=nothing, return_dict::Bool=false)::Union{Dict, DsoParams, NULL}
+
 
 Set stage and load parameters from params.yaml via dso-cli.
 
 # Arguments
 
--`stage_path::Union{String, Nothing}`: path to stage
+-`stage_path::Union{AbstractString, Nothing}`: path to stage
 -`return_dict::Bool`: indicates if parameters should be returned as dict or as DsoParams object.
 
 # Output
 
 Dso parameters. Either in dict format or as DsoParams object.
+The function will return null if DSO cli is not available.
 
 # Examples
 ```Julia
@@ -163,8 +165,11 @@ params_obj = read_params("path/to/params.yaml", false)
 same_params_obj = read_params("path/to/params.yaml")
 ```
 """
-function read_params(stage_path::Union{String, Nothing}=nothing, return_dict::Bool=false)::Union{Dict, DsoParams}
-    
+function read_params(stage_path::Union{AbstractString, Nothing}=nothing, return_dict::Bool=false)::Union{Dict, DsoParams, NULL}
+    if !dso_cli_available()
+        return null
+    end
+
     current_stage_path = ""
 
     if !isnothing(stage_path)
@@ -182,21 +187,13 @@ function read_params(stage_path::Union{String, Nothing}=nothing, return_dict::Bo
     tmp_config_file = tempname()
     tmp_err_file = tempname()
 
-    try
-        #check if dso cli is available
-        dso_cli_available()
-        # Run external process
-        # stdout and stderr redirection in Julia
-        pipeline_cmd = pipeline(`$DSO_EXEC get-config $current_stage_path`, 
-                                stdout=tmp_config_file, 
-                                stderr=tmp_err_file)
+    # Run external process
+    # stdout and stderr redirection in Julia
+    pipeline_cmd = pipeline(`$DSO_EXEC get-config $current_stage_path`, 
+                            stdout=tmp_config_file, 
+                            stderr=tmp_err_file)
         
-        run(pipeline_cmd)
-
-    catch e
-        stderror_content = isfile(tmp_err_file) ? read(tmp_err_file, String) : ""
-        error("An error occurred when executing dso get-config: \n$stderror_content\n$(sprint(showerror, e))")
-    end
+    run_dso(pipeline_cmd)
 
     yaml_data = read_safe_yaml(tmp_config_file)
     
@@ -210,7 +207,7 @@ end
 
 
 """
-    compile_config(dir::Union{AbstractString, Nothing})::Nothing
+    compile_config(dir::Union{AbstractString, Nothing})::Bool
 
 This function runs the dso compile-config command and updates the params.yaml with info from other params.in.yaml and params.yaml.
 
@@ -218,14 +215,23 @@ This function runs the dso compile-config command and updates the params.yaml wi
 
 - `dir::Union{AbstractString, Nothing}`: directory (including subdirectories and relevant parent files) to compile. By default compiles the current working directory.
 
- Examples
+# Output
+
+true: dso compile-config ran sucessfully
+false: else 
+
+# Examples
 
 ```Julia
 compile_config()
 compile_config("/path/to/dso/item")
 ```
 """
-function compile_config(dir::Union{AbstractString, Nothing}=nothing)::Nothing
+function compile_config(dir::Union{AbstractString, Nothing}=nothing)::BOOL
+    if !dso_cli_available()
+        return false
+    end
+
     if isnothing(dir)
         path_to_stage = here()
     else
@@ -233,32 +239,31 @@ function compile_config(dir::Union{AbstractString, Nothing}=nothing)::Nothing
     end
 
     if !isdir(path_to_stage)
-        error("No dso item termed $path_to_stage ")
+        println("No dso item termed $path_to_stage ")
+        return false
     end
 
+    # Run external process
+    # stdout and stderr redirection in Julia
     tmp_config_file = tempname()
     tmp_err_file = tempname()
-    try
-        #check if dso cli is available
-        dso_cli_available()
-        # Run external process
-        # stdout and stderr redirection in Julia
-        pipeline_cmd = pipeline(`$DSO_EXEC compile-config $path_to_stage `, 
-                                stdout=tmp_config_file, 
-                                stderr=tmp_err_file)
-        
-        run(pipeline_cmd)
 
-    catch e
-        stderror_content = isfile(tmp_err_file) ? read(tmp_err_file, String) : ""
-        error("An error occurred when executing dso compile-config: \n$stderror_content\n$(sprint(showerror, e))")
-    end
-    return nothing
+    pipeline_cmd = pipeline(`$DSO_EXEC compile-config $path_to_stage `, 
+                            stdout=tmp_config_file, 
+                            stderr=tmp_err_file)
+        
+    run_dso(pipeline_cmd)
+
+    # Clean up temp files
+    rm(tmp_config_file, force=true)
+    rm(tmp_err_file, force=true)
+
+    return true
 end
 
 
 """
-    create(item; dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Nothing
+    create(item; dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Bool
 
 Create a new project, folder or stage in a given directory.
 
@@ -269,6 +274,11 @@ Create a new project, folder or stage in a given directory.
 - `name::Union{String, Nothing}`: project name: e.g. single_cell_lung_atlas. Can't be empty
 - `description::Union{String, Nothing}`: description short project description. Can't be empty
 
+# Output
+
+true: dso create ran sucessfully
+false: else
+
 # Examples
 
 ```Julia
@@ -277,29 +287,34 @@ create("folder", name = "single_cell_lung_atlas", description = "This folder com
 create("project", name = "single_cell_lung_atlas", description = "This stage solves all your problems!")
 ```
 """
-function create(item::String ;dir::Union{String, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Nothing
-    dso_cli_available()
+function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Bool
+    if !dso_cli_available()
+        return false
+    end
 
     if isnothing(name)
-        error("No name for potential dso item provided")
+        println("No name for potential dso item provided")
+        return false
     end
 
     if isnothing(description)
-        error("Description of potential dso item must not be empty")
+        println("Description of potential dso item must not be empty")
+        return false
     end
 
     if isnothing(dir)
         path_to_stage = here(name)
     else
-        path_to_stage = joinpath(dir, name)
+        path_to_stage = dir
     end
 
-    if isdir(path_to_stage)
-        error("Item already exists")
+    if !isdir(path_to_stage)
+        println("No dso item termed $path_to_stage ")
+        return false
     end
 
-    
-
+    # Run external process
+    # stdout and stderr redirection in Julia
     tmp_config_file = tempname()
     tmp_err_file = tempname()
 
@@ -319,22 +334,21 @@ function create(item::String ;dir::Union{String, Nothing}=nothing, name::Union{S
         error("item must be project, folder or stage!")
     end
     
-    try
-        current_directory = pwd()
-        cd(path_to_stage)
-        run(pipeline_cmd)
-        cd(current_directory)
-    catch e
-        stderror_content = isfile(tmp_err_file) ? read(tmp_err_file, String) : ""
-        error("An error occurred when executing create function: \n$stderror_content\n$(sprint(showerror, e))")
-    end
+    current_directory = pwd()
+    cd(path_to_stage)
+    run_dso(pipeline_cmd)
+    cd(current_directory)
 
-    return nothing
+    # Clean up temp files
+    rm(tmp_config_file, force=true)
+    rm(tmp_err_file, force=true)
+
+    return true
 end
 
 
 """
-    repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=false)::Nothing
+    repro(;stage_dir::Union{AbstractString, Nothing}=nothing, single_stage::Bool=false)::Bool
 
 This function reproduces a stage specified by `stage_dir`.
 If `single_stage` is set to `TRUE`,
@@ -348,6 +362,12 @@ By default, the current stage will be reproduced.
 - `stage_dir::Union{String, Nothing}`: The path to a stage. Defaults to the current stage (Nothing).
 - `single_stage::Bool`: flag indicating whether to reproduce only the current stage (`true`) or the current stage with all dependencies (`false`). Defaults to `false`
 
+# Output
+
+true: dso repro ran sucessfully
+false: else
+
+
 # Examples
 
 ```Julia
@@ -356,8 +376,11 @@ repro(stage_dir = "/path/to/dso/stage")
 repro(stage_dir = "/path/to/dso/stage", single_stage = true)
 ```
 """
-function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=false)::Nothing
-    dso_cli_available()
+function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=false)::Bool
+    if !dso_cli_available()
+        return false
+    end
+
     if isnothing(stage_dir)
         path_to_stage = here("dvc.yaml")
     else
@@ -365,9 +388,12 @@ function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=fa
     end
 
     if !isfile(path_to_stage)
-        error("Not dso stage termed $path_to_stage")
+        println("Not dso stage termed $path_to_stage")
+        return false
     end
 
+    # Run external process
+    # stdout and stderr redirection in Julia
     tmp_config_file = tempname()
     tmp_err_file = tempname()
 
@@ -383,11 +409,11 @@ function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=fa
                                 stderr=tmp_err_file)
     end
         
-    try
-        run(pipeline_cmd)
-    catch e
-        stderror_content = isfile(tmp_err_file) ? read(tmp_err_file, String) : ""
-        error("An error occurred when executing dso repro: \n$stderror_content\n$(sprint(showerror, e))")
-    end
-    return nothing
+    run_dso(pipeline_cmd)
+
+    # Clean up temp files
+    rm(tmp_config_file, force=true)
+    rm(tmp_err_file, force=true)
+
+    return true
 end
