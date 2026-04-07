@@ -1,6 +1,7 @@
 using FilePathsBase
 using YAML
 using Dates
+using Mocking: @mock
 
 """
    here(rel_path::Union{Nothing,AbstractString}=nothing)::AbstractString
@@ -114,33 +115,6 @@ function set_stage(stage::Union{String,AbstractString})::Nothing
 
     return nothing
 end
-
-
-"""
-    read_safe_yaml(params_file::AbstractString)::Dict
-
-Reads params YAML.
-
-# Arguments
-
--`params_file::AbstractString`: path to the parameter file
-
-# Output
-
-Parameters in dictionary format
-
-# Examples
-
-```Julia
-params_dict = read_safe_yaml("path/to/params.yaml")
-```
-"""
-function read_safe_yaml(params_file::AbstractString)::Dict
-    return YAML.load_file(params_file)
-end
-
-
-
 
 """
     read_params(stage_path::Union{AbstractString, Nothing}=nothing, return_dict::Bool=false)::Union{Dict, DsoParams, NULL}
@@ -288,7 +262,8 @@ create("project", name = "single_cell_lung_atlas", description = "This stage sol
 ```
 """
 function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Bool
-    if !dso_cli_available()
+
+    if (@mock dso_cli_available()===false)
         return false
     end
 

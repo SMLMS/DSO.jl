@@ -134,7 +134,7 @@ Helper function that executes the dso command
 
 nothing
 """
-function run_dso(command::Base.ProcessChain)::Nothing
+function run_dso(command::Base.CmdRedirect)::Nothing
     try
         run(command)
     catch e
@@ -142,4 +142,28 @@ function run_dso(command::Base.ProcessChain)::Nothing
         error("An error occurred when executing dso: \n$stderror_content\n$(sprint(showerror, e))")
     end
     return nothing
+end
+
+
+"""
+    read_safe_yaml(params_file::AbstractString)::Dict
+
+Reads params YAML.
+
+# Arguments
+
+-`params_file::AbstractString`: path to the parameter file
+
+# Output
+
+Parameters in dictionary format
+
+# Examples
+
+```Julia
+params_dict = read_safe_yaml("path/to/params.yaml")
+```
+"""
+function read_safe_yaml(params_file::AbstractString)::Dict
+    return YAML.load_file(params_file)
 end
