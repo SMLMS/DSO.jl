@@ -17,7 +17,7 @@ using Pkg
 Pkg.add("DSO")
 ```
 
-## Usage
+## 🛠️ Usage
 
 ```julia
 using DSO
@@ -58,10 +58,18 @@ params = read_params("analysis")
 - Julia ≥ 1.10.10
 - Dependencies: Dates, FilePathsBase, YAML
 
-## Further reading
+## 🧪 Testing
+Run `pkg> test` to verify the installation. 
+
+## 🐙 Further reading
 
 [Data Science Operations](https://github.com/Boehringer-Ingelheim/dso)
 
-## License
 
-See [LICENSE](LICENSE).
+(Your Julia code examples here...)
+
+## 📚 Documentation
+Check out the [Docs](https://link-to-docs) for the full API reference.
+
+## ⚖️ License
+MIT © [Your Name]
