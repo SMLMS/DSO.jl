@@ -1,6 +1,8 @@
 # DSO.jl
 
-[![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+[![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml)
+
+[![Test Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml)
 
 ![Logo](assets/dso_jl.png)
 
@@ -69,7 +71,7 @@ Run `pkg> test` to verify the installation.
 (Your Julia code examples here...)
 
 ## 📚 Documentation
-Check out the [Docs](https://link-to-docs) for the full API reference.
+Check out the [Docs](https://SMLMS.github.io/DSO.jl/dev/) for the full API reference.
 
 ## ⚖️ License
 MIT © [Your Name]
