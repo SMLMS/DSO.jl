@@ -15,4 +15,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/SMLMS/DSO.jl.git",
+    devbranch = "main"
 )
