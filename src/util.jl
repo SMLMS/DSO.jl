@@ -122,7 +122,7 @@ end
 
 
 """
-    run_dso(command::Base.ProcessChain)::Nothing
+    run_dso_cli(command::Base.ProcessChain)::Nothing
 
 Helper function that executes the dso command
 
@@ -134,7 +134,7 @@ Helper function that executes the dso command
 
 nothing
 """
-function run_dso(command::Base.CmdRedirect)::Nothing
+function run_dso_cli(command::Base.CmdRedirect, tmp_err_file::AbstractString)::Nothing
     try
         run(command)
     catch e
@@ -165,5 +165,5 @@ params_dict = read_safe_yaml("path/to/params.yaml")
 ```
 """
 function read_safe_yaml(params_file::AbstractString)::Dict
-    return YAML.load_file(params_file)
+    return YAML.load_file(params_file; dicttype=Dict{Symbol, Any})
 end

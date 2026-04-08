@@ -1,7 +1,6 @@
 using FilePathsBase
 using YAML
 using Dates
-using Mocking: @mock
 
 """
    here(rel_path::Union{Nothing,AbstractString}=nothing)::AbstractString
@@ -126,6 +125,9 @@ Set stage and load parameters from params.yaml via dso-cli.
 
 -`stage_path::Union{AbstractString, Nothing}`: path to stage
 -`return_dict::Bool`: indicates if parameters should be returned as dict or as DsoParams object.
+-`dso_available::Function`: Low level function to check if dso is installed. Do not alter. This is for tetsing purposes only.
+-`run_dso::Function`: Low level function that passes commands to dso. Do not alter. This is for testing purposes only.
+-`read_yaml::Function`: Low level function to read yaml files. Do not alter. This is for testing purposes only.
 
 # Output
 
@@ -139,9 +141,9 @@ params_obj = read_params("path/to/params.yaml", false)
 same_params_obj = read_params("path/to/params.yaml")
 ```
 """
-function read_params(stage_path::Union{AbstractString, Nothing}=nothing, return_dict::Bool=false)::Union{Dict, DsoParams, NULL}
-    if !dso_cli_available()
-        return null
+function read_params(stage_path::Union{AbstractString, Nothing}=nothing; return_dict::Bool=false, dso_available::Function=dso_cli_available, run_dso::Function=run_dso_cli, read_yaml::Function=read_safe_yaml)::Union{Dict, DsoParams, Bool}
+    if !dso_available()
+        return false
     end
 
     current_stage_path = ""
@@ -169,7 +171,7 @@ function read_params(stage_path::Union{AbstractString, Nothing}=nothing, return_
         
     run_dso(pipeline_cmd)
 
-    yaml_data = read_safe_yaml(tmp_config_file)
+    yaml_data = read_yaml(tmp_config_file)
     
     # Clean up temp files
     rm(tmp_config_file, force=true)
@@ -188,6 +190,8 @@ This function runs the dso compile-config command and updates the params.yaml wi
 # Arguments
 
 - `dir::Union{AbstractString, Nothing}`: directory (including subdirectories and relevant parent files) to compile. By default compiles the current working directory.
+- `dso_available::Function`: Low level function to check if dso is installed. Do not alter. This is for tetsing purposes only.
+- `run_dso::Function`: Low level function that passes commands to dso. Do not alter. This is for testing purposes only.
 
 # Output
 
@@ -201,8 +205,8 @@ compile_config()
 compile_config("/path/to/dso/item")
 ```
 """
-function compile_config(dir::Union{AbstractString, Nothing}=nothing)::BOOL
-    if !dso_cli_available()
+function compile_config(dir::Union{AbstractString, Nothing}=nothing; dso_available::Function=dso_cli_available, run_dso::Function=run_dso_cli)::Bool
+    if !dso_available()
         return false
     end
 
@@ -247,6 +251,8 @@ Create a new project, folder or stage in a given directory.
 - `dir::Union{AbstractString, Nothing}`: path to directory in which project shall be initialised
 - `name::Union{String, Nothing}`: project name: e.g. single_cell_lung_atlas. Can't be empty
 - `description::Union{String, Nothing}`: description short project description. Can't be empty
+- `dso_available::Function`: Low level function to check if dso is installed. Do not alter. This is for tetsing purposes only.
+- `run_dso::Function`: Low level function that passes commands to dso. Do not alter. This is for testing purposes only.
 
 # Output
 
@@ -261,9 +267,9 @@ create("folder", name = "single_cell_lung_atlas", description = "This folder com
 create("project", name = "single_cell_lung_atlas", description = "This stage solves all your problems!")
 ```
 """
-function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Bool
+function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing, dso_available::Function=dso_cli_available, run_dso::Function=run_dso_cli)::Bool
 
-    if (@mock dso_cli_available()===false)
+    if !dso_available()
         return false
     end
 
@@ -336,6 +342,9 @@ By default, the current stage will be reproduced.
 
 - `stage_dir::Union{String, Nothing}`: The path to a stage. Defaults to the current stage (Nothing).
 - `single_stage::Bool`: flag indicating whether to reproduce only the current stage (`true`) or the current stage with all dependencies (`false`). Defaults to `false`
+- `dso_available::Function`: Low level function to check if dso is installed. Do not alter. This is for tetsing purposes only.
+- `run_dso::Function`: Low level function that passes commands to dso. Do not alter. This is for testing purposes only.
+
 
 # Output
 
@@ -351,19 +360,19 @@ repro(stage_dir = "/path/to/dso/stage")
 repro(stage_dir = "/path/to/dso/stage", single_stage = true)
 ```
 """
-function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=false)::Bool
-    if !dso_cli_available()
+function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=false, dso_available::Function=dso_cli_available, run_dso::Function=run_dso_cli)::Bool
+    if !dso_available()
         return false
     end
 
     if isnothing(stage_dir)
         path_to_stage = here("dvc.yaml")
     else
-        path_to_stage = joinpath(dir, "dvc.yaml")
+        path_to_stage = joinpath(stage_dir, "dvc.yaml")
     end
 
     if !isfile(path_to_stage)
-        println("Not dso stage termed $path_to_stage")
+        println("No dso stage termed $path_to_stage")
         return false
     end
 

@@ -2,6 +2,8 @@
 
 [![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
+![Logo](assets/dso_jl.png)
+
 A Julia companion package for the DSO CLI, providing project and stage management, YAML parameter loading, and configuration utilities.
 
 ```@docs

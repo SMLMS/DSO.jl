@@ -38,7 +38,7 @@ Any data stored under the kprovided key in data Dict
 
 ```Julia
 params = DsoParams(data::Dict{Symbol, Any})
-property_value = params.key
+property_value == params.key
 ```
 """
 function Base.getproperty(obj::DsoParams, sym::Symbol)::Any

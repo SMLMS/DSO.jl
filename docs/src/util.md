@@ -9,5 +9,7 @@ DSO.is_relative_to
 DSO.find_in_parent
 DSO.get_project_root
 DSO.dso_cli_available
+DSO.run_dso_cli
+DSO.read_safe_yaml
 ```
 

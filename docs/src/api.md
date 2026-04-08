@@ -22,7 +22,6 @@ Use these functions to load and parse configuration parameters for your DSO proj
 
 ```@docs
 read_params
-DSO.read_safe_yaml
 ```
 
 ---
