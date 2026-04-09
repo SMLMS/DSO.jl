@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml)
 
-[![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml)
+[![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/test.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/test.yml)
 
 ![Logo](assets/dso_jl.png)
 
