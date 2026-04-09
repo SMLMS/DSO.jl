@@ -241,7 +241,7 @@ end
 
 
 """
-    create(item; dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing)::Bool
+    create(item; dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing, template::Union{String, Nothing}=nothing)::Bool
 
 Create a new project, folder or stage in a given directory.
 
@@ -251,6 +251,7 @@ Create a new project, folder or stage in a given directory.
 - `dir::Union{AbstractString, Nothing}`: path to directory in which project shall be initialised
 - `name::Union{String, Nothing}`: project name: e.g. single_cell_lung_atlas. Can't be empty
 - `description::Union{String, Nothing}`: description short project description. Can't be empty
+- `template::Union{String, Nothing}`: Template for the stage (quarto_jl, quarto_py, quarto_r).
 - `dso_available::Function`: Low level function to check if dso is installed. Do not alter. This is for tetsing purposes only.
 - `run_dso::Function`: Low level function that passes commands to dso. Do not alter. This is for testing purposes only.
 
@@ -267,7 +268,7 @@ create("folder", name = "single_cell_lung_atlas", description = "This folder com
 create("project", name = "single_cell_lung_atlas", description = "This stage solves all your problems!")
 ```
 """
-function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing, dso_available::Function=dso_cli_available, run_dso::Function=run_dso_cli)::Bool
+function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name::Union{String, Nothing}=nothing, description::Union{String, Nothing}=nothing, template::Union{String, Nothing}=nothing, dso_available::Function=dso_cli_available, run_dso::Function=run_dso_cli)::Bool
 
     if !dso_available()
         return false
@@ -308,9 +309,16 @@ function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name:
             stdout=tmp_config_file, 
             stderr=tmp_err_file)
     elseif (item === "stage")
-        pipeline_cmd = pipeline(`$DSO_EXEC create stage $name --description $description`, 
-            stdout=tmp_config_file, 
-            stderr=tmp_err_file)
+        if isnothing(template)
+            pipeline_cmd = pipeline(`$DSO_EXEC create stage $name --description $description`,
+                stdin = stdin,
+                stdout=tmp_config_file, 
+                stderr=tmp_err_file)
+        else
+            pipeline_cmd = pipeline(`$DSO_EXEC create stage $name --template $template --description $description`,
+                stdout=tmp_config_file, 
+                stderr=tmp_err_file)
+        end  
     else
         error("item must be project, folder or stage!")
     end
