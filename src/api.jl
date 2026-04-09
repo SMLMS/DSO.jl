@@ -310,10 +310,7 @@ function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name:
             stderr=tmp_err_file)
     elseif (item === "stage")
         if isnothing(template)
-            pipeline_cmd = pipeline(`$DSO_EXEC create stage $name --description $description`,
-                stdin = stdin,
-                stdout=tmp_config_file, 
-                stderr=tmp_err_file)
+            error("template must not be nothing. Select from: quarto_jl, quarto_py, quarto_r")
         else
             pipeline_cmd = pipeline(`$DSO_EXEC create stage $name --template $template --description $description`,
                 stdout=tmp_config_file, 
