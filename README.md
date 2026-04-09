@@ -2,11 +2,11 @@
 
 [![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml)
 
-[![Test Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml)
+[![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml)
 
 ![Logo](assets/dso_jl.png)
 
-A Julia companion package for the DSO CLI, providing project and stage management, YAML parameter loading, and configuration utilities.
+A Julia companion package for the [DSO CLI](https://github.com/Boehringer-Ingelheim/dso), providing project and stage management, YAML parameter loading, and configuration utilities.
 
 ```@docs
 DSO.DSO
@@ -61,17 +61,26 @@ params = read_params("analysis")
 - Dependencies: Dates, FilePathsBase, YAML
 
 ## 🧪 Testing
-Run `pkg> test` to verify the installation. 
+
+Run
+
+```julia
+pkg> test
+```
+
+to verify the installation. 
 
 ## 🐙 Further reading
 
-[Data Science Operations](https://github.com/Boehringer-Ingelheim/dso)
+More information about the DSO project as well as an R-companion can be found here:
 
-
-(Your Julia code examples here...)
+* [Data Science Operations](https://github.com/Boehringer-Ingelheim/dso)
+* [DSO R companion](https://github.com/Boehringer-Ingelheim/dso-r)
 
 ## 📚 Documentation
+
 Check out the [Docs](https://SMLMS.github.io/DSO.jl/dev/) for the full API reference.
 
 ## ⚖️ License
-MIT © [Your Name]
+
+MIT © Sebastian Malkusch
