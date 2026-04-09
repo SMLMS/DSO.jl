@@ -169,7 +169,7 @@ function read_params(stage_path::Union{AbstractString, Nothing}=nothing; return_
                             stdout=tmp_config_file, 
                             stderr=tmp_err_file)
         
-    run_dso(pipeline_cmd)
+    run_dso(pipeline_cmd, tmp_err_file)
 
     yaml_data = read_yaml(tmp_config_file)
     
@@ -230,7 +230,7 @@ function compile_config(dir::Union{AbstractString, Nothing}=nothing; dso_availab
                             stdout=tmp_config_file, 
                             stderr=tmp_err_file)
         
-    run_dso(pipeline_cmd)
+    run_dso(pipeline_cmd, tmp_err_file)
 
     # Clean up temp files
     rm(tmp_config_file, force=true)
@@ -317,7 +317,7 @@ function create(item::String ;dir::Union{AbstractString, Nothing}=nothing, name:
     
     current_directory = pwd()
     cd(path_to_stage)
-    run_dso(pipeline_cmd)
+    run_dso(pipeline_cmd, tmp_err_file)
     cd(current_directory)
 
     # Clean up temp files
@@ -393,7 +393,7 @@ function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=fa
                                 stderr=tmp_err_file)
     end
         
-    run_dso(pipeline_cmd)
+    run_dso(pipeline_cmd, tmp_err_file)
 
     # Clean up temp files
     rm(tmp_config_file, force=true)
