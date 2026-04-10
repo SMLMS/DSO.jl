@@ -13,7 +13,7 @@ import DSO: create, compile_config, repro, read_params, DsoParams, Config, here,
                 name="AwesomeProject",
                 description = "Some amazing analysis",
                 dso_available = () -> true,
-                run_dso = (command::Base.CmdRedirect) -> nothing
+                run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing
             )
             @test result isa Bool
             @test result == true
@@ -30,7 +30,7 @@ end
                 name="AwesomeProject",
                 description = "Some amazing analysis",
                 dso_available = () -> false,
-                run_dso = (command::Base.CmdRedirect) -> nothing
+                run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing
             )
             @test result isa Bool
             @test result == false
@@ -58,7 +58,7 @@ end
         cd(path_to_stage) do
             result = compile_config(
                 dso_available = () -> true,
-                run_dso = (command::Base.CmdRedirect) -> nothing
+                run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing
             )
             @test result isa Bool
             @test result == true
@@ -77,7 +77,7 @@ end
         result = compile_config(
             tmp,
             dso_available = () -> false,
-            run_dso = (command::Base.CmdRedirect) -> nothing
+            run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing
         )
         @test result isa Bool
         @test result == false
@@ -94,7 +94,7 @@ end
         result = repro(
             stage_dir = tmp,
             dso_available = () -> true,
-            run_dso = (command::Base.CmdRedirect) -> nothing
+            run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing
         )
         rm(config_file, force=true)
         @test result isa Bool
@@ -111,7 +111,7 @@ end
         result = repro(
             stage_dir = tmp,
             dso_available = () -> false,
-            run_dso = (command::Base.CmdRedirect) -> nothing
+            run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing
         )
         rm(config_file, force=true)
         @test result isa Bool
@@ -143,7 +143,7 @@ end
                 path_to_stage,
                 return_dict = true,
                 dso_available = () -> true,
-                run_dso = (command::Base.CmdRedirect) -> nothing,
+                run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing,
                 read_yaml = (params_file::AbstractString) -> params_dict
             )
             @test result_dict isa Dict
@@ -152,7 +152,7 @@ end
             result_obj = read_params(
                 path_to_stage,
                 dso_available = () -> true,
-                run_dso = (command::Base.CmdRedirect) -> nothing,
+                run_dso = (command::Base.CmdRedirect, tmp_err_file::AbstractString) -> nothing,
                 read_yaml = (params_file::AbstractString) -> params_dict
             )
             @test result_obj isa DsoParams
