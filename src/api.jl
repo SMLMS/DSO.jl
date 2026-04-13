@@ -1,6 +1,7 @@
 using FilePathsBase
 using YAML
 using Dates
+using TOML
 
 """
    here(rel_path::Union{Nothing,AbstractString}=nothing)::AbstractString
@@ -405,4 +406,27 @@ function repro(;stage_dir::Union{String, Nothing}=nothing, single_stage::Bool=fa
     rm(tmp_err_file, force=true)
 
     return true
+end
+
+
+"""
+    session_info(Nothing)::Nothing
+
+Prints information about the julia session and the runtime of the anslysis
+
+# Examples
+
+```Julia
+session_info()
+```
+"""
+function session_info()::Nothing
+    path_to_root = DSO.get_project_root(here())
+    path_to_project_toml = joinpath(path_to_root, "Project.toml")
+    toml_content = TOML.parsefile(path_to_project_toml)
+
+    println(now())
+    println(TOML.print(toml_content))
+    
+    return nothing
 end

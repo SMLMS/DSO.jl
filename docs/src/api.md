@@ -38,6 +38,16 @@ repro
 
 ---
 
+## Session information
+
+Get the full information about the current session for reproducibility reasons.
+
+```@docs
+session_info
+```
+
+---
+
 ## **Error Handling & Dependencies**
 
 All CLI-dependent functions (`read_params`, `compile_config`, `create`, `repro`) perform a check via `dso_cli_available()` before execution. If an external process fails, these functions capture the `stderr` content and throw a descriptive Julia error.

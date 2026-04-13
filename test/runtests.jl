@@ -1,7 +1,7 @@
 using DSO
 using Test
 
-import DSO: create, compile_config, repro, read_params, DsoParams, Config, here, stage_here, set_stage
+import DSO: create, compile_config, repro, read_params, DsoParams, Config, here, stage_here, set_stage, session_info
 
 
 @testset "Project creation with CLI available" begin
@@ -184,7 +184,11 @@ end
         path_to_git = joinpath(tmp, ".git")
         path_to_stage = joinpath(tmp, "01_stage")
         path_to_project_config = joinpath(tmp, "dvc.yaml")
+        path_to_toml = joinpath(tmp, "Project.toml")
         path_to_stage_config = joinpath(path_to_stage, "dvc.yaml")
+        open(path_to_toml, "w") do file
+            write(file, "[deps]\nDSO = '1ecce73e-f1b1-49c8-92b6-7d632d350df1'\n")
+        end
         mkdir(path_to_git)
         mkdir(path_to_stage)
         open(path_to_project_config, "w") do file
@@ -201,6 +205,7 @@ end
             set_stage("01_stage")
             @test string(DSO.CONFIG.stage_here) == path_to_stage
             @test stage_here("new_output.csv") == joinpath(path_to_stage, "new_output.csv")
+            @test session_info() == nothing
         end
     end
 end

@@ -22,7 +22,7 @@ module DSO
     export DsoParams, get_keys
     include("DsoParams.jl")
 
-    export here, stage_here, set_stage, read_params, create, compile_config, repro
+    export here, stage_here, set_stage, read_params, create, compile_config, repro, session_info
     include("api.jl")
 
     include("util.jl")
