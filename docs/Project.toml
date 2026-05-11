@@ -1,3 +1,3 @@
 [deps]
-DSO = "1ecce73e-f1b1-49c8-92b6-7d632d350df1"
+DataScienceOperations = "3782fec0-3ce0-4a96-88a6-49560f470476"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"

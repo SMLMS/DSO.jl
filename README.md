@@ -4,7 +4,7 @@
 
 [![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml)
 
-![Logo](assets/DataScienceOperations_jl.png)
+![Logo](assets/logo.png)
 
 
 [DSO](https://github.com/Boehringer-Ingelheim/dso), is a command line helper for building reproducible data analysis projects on top of dvc. To learn more about dso, please refer to the [dso documentation](https://boehringer-ingelheim.github.io/dso/). **DataScienceOperations.jl** is the Julia companion package for dso. The purpose of this package is to provide access to files and configuration organized in a dso project.
