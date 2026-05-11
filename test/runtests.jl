@@ -187,7 +187,7 @@ end
         path_to_toml = joinpath(tmp, "Project.toml")
         path_to_stage_config = joinpath(path_to_stage, "dvc.yaml")
         open(path_to_toml, "w") do file
-            write(file, "[deps]\nDataScienceOperations = '1ecce73e-f1b1-49c8-92b6-7d632d350df1'\n")
+            write(file, "[deps]\nDataScienceOperations = '3782fec0-3ce0-4a96-88a6-49560f470476'\n")
         end
         mkdir(path_to_git)
         mkdir(path_to_stage)
@@ -205,7 +205,7 @@ end
             set_stage("01_stage")
             @test string(DataScienceOperations.CONFIG.stage_here) == path_to_stage
             @test stage_here("new_output.csv") == joinpath(path_to_stage, "new_output.csv")
-            @test session_info() == nothing
+            @test isnothing(session_info())
         end
     end
 end
