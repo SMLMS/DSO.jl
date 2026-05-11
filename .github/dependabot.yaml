@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Maintain Julia dependencies in Project.toml
+  - package-ecosystem: "julia"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # Group updates to avoid PR noise
+    groups:
+      dso-dependencies:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "julia"
+
+  # Maintain GitHub Action versions (e.g., checkout, setup-julia)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
