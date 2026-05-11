@@ -1,18 +1,18 @@
-# DSO.jl
+# DataScienceOperations.jl
 
 [![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/documentation.yml)
 
 [![Build Status](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/SMLMS/DSO.jl/actions/workflows/CI.yml)
 
-![Logo](assets/dso_jl.png)
+![Logo](assets/DataScienceOperations_jl.png)
 
 
-[DSO](https://github.com/Boehringer-Ingelheim/dso), is a command line helper for building reproducible data analysis projects on top of dvc. To learn more about dso, please refer to the [dso documentation](https://boehringer-ingelheim.github.io/dso/). {DSO.jl} is the Julia companion package for dso. The purpose of this package is to provide access to files and configuration organized in a dso project.
+[DSO](https://github.com/Boehringer-Ingelheim/dso), is a command line helper for building reproducible data analysis projects on top of dvc. To learn more about dso, please refer to the [dso documentation](https://boehringer-ingelheim.github.io/dso/). **DataScienceOperations.jl** is the Julia companion package for dso. The purpose of this package is to provide access to files and configuration organized in a dso project.
 
 ## Installation
 
 ```julia
-pkg> add https://github.com/SMLMS/DSO.jl
+pkg> add https://github.com/SMLMS/DataScienceOperations.jl
 ```
 
 ## 🛠️ Usage
@@ -30,7 +30,7 @@ DSO.jl provides convenient access to stage parameters from Julia scripts or note
 
 
 ```julia
-using DSO
+using DataScienceOperations
 
 params_obj = read_params("subfolder/my_stage")
 
@@ -57,7 +57,7 @@ set_stage("analysis")
 stage_path = stage_here()
 ```
 
-Creating a stage within the Julia environment can be performed using {create} and supplying it with the relative path of the stage from project root and a description.
+Creating a stage within the Julia environment can be performed using **create** and supplying it with the relative path of the stage from project root and a description.
 
 ```Julia
 create(
@@ -71,7 +71,7 @@ create(
 ## Requirements
 
 - Julia ≥ 1.10.10
-- Dependencies: Dates, FilePathsBase, YAML
+- Dependencies: Dates, FilePathsBase, YAML, TOML
 
 ## 🧪 Testing
 

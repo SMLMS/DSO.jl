@@ -1,4 +1,4 @@
-name = "DSO"
+name = "DataScienceOperations"
 uuid = "1ecce73e-f1b1-49c8-92b6-7d632d350df1"
 license = "MIT"
 authors = ["Sebastian Malkusch"]

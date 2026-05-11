@@ -1,7 +1,7 @@
 """
-    module DSO
+    module DataScienceOperations
  
-DSO.jl is a Julia companion package for the DSO CLI, providing utilities for project and stage management, configuration handling,
+DataScienceOperations.jl is a Julia companion package for the DSO CLI, providing utilities for project and stage management, configuration handling,
 and robust parameter loading from YAML files. It is designed to integrate seamlessly with DSO-based workflows,
 offering ergonomic access to project roots, stage directories, and configuration parameters.
  
@@ -13,7 +13,7 @@ Main features:
  
 Intended for users who need to manage complex project structures and configurations in Julia, especially in conjunction with the DSO CLI.
 """
-module DSO
+module DataScienceOperations
 
     # Exports
     export Config 

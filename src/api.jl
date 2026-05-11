@@ -421,7 +421,7 @@ session_info()
 ```
 """
 function session_info()::Nothing
-    path_to_root = DSO.get_project_root(here())
+    path_to_root = DataScienceOperations.get_project_root(here())
     path_to_project_toml = joinpath(path_to_root, "Project.toml")
     toml_content = TOML.parsefile(path_to_project_toml)
 

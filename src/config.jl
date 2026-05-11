@@ -3,7 +3,7 @@ using FilePathsBase
 """
     Config
 
-Container for global DSO API configuration.
+Container for global DataScienceOperations API configuration.
 
 # Fields
 

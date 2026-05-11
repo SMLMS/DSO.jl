@@ -1,10 +1,10 @@
 using Documenter
-using DSO
+using DataScienceOperations
 
 makedocs(
-    sitename = "DSO.jl Documentation",
+    sitename = "DataScienceOperations.jl Documentation",
     format = Documenter.HTML(),
-    modules = [DSO],
+    modules = [DataScienceOperations],
     pages = [
         "Home" => "index.md",
         "Core API" => "api.md",
@@ -14,6 +14,6 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/SMLMS/DSO.jl.git",
+    repo = "github.com/SMLMS/DataScienceOperations.jl.git",
     devbranch = "main"
 )
