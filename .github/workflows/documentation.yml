@@ -24,7 +24,7 @@ jobs:
         with:
           # Explicitly using Julia 1.10 (LTS)
           version: '1.10'
-      - uses: julia-actions/cache@v2
+      - uses: julia-actions/cache@v3
       - name: Install dependencies
         # This installs DSO.jl into the docs environment and instantiates it
         shell: julia --color=yes --project=docs {0}
