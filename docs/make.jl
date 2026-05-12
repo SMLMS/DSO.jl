@@ -15,5 +15,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/SMLMS/DataScienceOperations.jl.git",
-    devbranch = "main"
+    devbranch = "develop"
 )
