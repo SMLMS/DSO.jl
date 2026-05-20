@@ -2,7 +2,7 @@ name = "DataScienceOperations"
 uuid = "3782fec0-3ce0-4a96-88a6-49560f470476"
 license = "MIT"
 authors = ["Sebastian Malkusch"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -11,7 +11,7 @@ TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
-julia = "1.10.10"
+julia = "1.10"
 FilePathsBase = "0.9"
 YAML = "0.4"
 TOML = "1.0"
